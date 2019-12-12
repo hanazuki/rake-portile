@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'pathname'
+require 'mini_portile2'
 require 'rake'
 
 module Rake
