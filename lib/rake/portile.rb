@@ -17,14 +17,14 @@ module Rake
     Rake::Task.define_task(:'symlink:bin' => :build) do
       bin_dir = Rake::Portile.target.join('bin').tap(&:mkpath)
       Rake::Portile.ports.each do |_, port|
-        FileUtils.ln_sf(Pathname(port[:recipe].path).join('bin').children, bin_dir)
+        FileUtils.ln_sf(Pathname(port[:recipe].path).join('bin').children.map {|p| p.relative_path_from(bin_dir) }, bin_dir)
       end
     end
 
     Rake::Task.define_task(:'symlink:sbin' => :build) do
       sbin_dir = Rake::Portile.target.join('sbin').tap(&:mkpath)
       Rake::Portile.ports.each do |_, port|
-        FileUtils.ln_sf(Pathname(port[:recipe].path).join('sbin').children, sbin_dir)
+        FileUtils.ln_sf(Pathname(port[:recipe].path).join('sbin').children.map {|p| p.relative_path_from(sbin_dir) }, sbin_dir)
       end
     end
 
