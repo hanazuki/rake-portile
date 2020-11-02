@@ -48,6 +48,14 @@ module Rake
       def jobs=(val)
         @jobs = Integer(val)
       end
+
+      def insecure_skip_verify
+        @skip_verify ||= false
+      end
+
+      def insecure_skip_verify=(val)
+        @skip_verify = !!val
+      end
     end
 
     module_function def def_port(name, version, depends: [], &block)
@@ -67,6 +75,9 @@ module Rake
         end
         def recipe.install
           execute('install', %Q(#{make_cmd} install-strip),) unless installed?
+        end
+        def recipe.verify_file(*)
+          super unless Rake::Portile.insecure_skip_verify
         end
         block.yield(recipe, depends.map {|id| Rake::Portile.ports.fetch(id)[:recipe] })
       end
